@@ -1,2 +1,5 @@
-target/
 *.class
+futbolAdmin/target/
+futbolAdmin/fulbo.db
+misc/
+out/
