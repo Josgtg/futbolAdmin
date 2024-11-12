@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import jakarta.persistence.*;
+import static jakarta.persistence.CascadeType.*;
 
 @Entity
 public class Team implements IEntity, Serializable {
@@ -16,8 +17,7 @@ public class Team implements IEntity, Serializable {
 
     @Column
     private String name;
-    @Column
-    @OneToMany
+    @OneToMany(mappedBy="team", cascade=ALL)
     private List<Player> players;
 
     public Team() {}
@@ -25,6 +25,11 @@ public class Team implements IEntity, Serializable {
     public Team(String name){
         this.name = name;
         this.players = new ArrayList<>();
+    }
+
+    public Team(String name, List<Player> players){
+        this(name);
+        this.players = players;
     }
     
     @Override

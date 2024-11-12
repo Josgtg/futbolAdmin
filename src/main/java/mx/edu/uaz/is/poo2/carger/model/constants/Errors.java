@@ -7,6 +7,7 @@ public class Errors {
     public static final String COULD_NOT_CONNECT_TO_DB = "no se pudo conectar a la base de datos";
     public static final String ENTITY_NOT_FOUND = "no se reconoció la entidad";
     public static final String PARSE_ERROR = "error al convertir";
+    public static final String INPUT_ERROR = "error al leer línea";
 
     public static String format(ErrorKind errCode, String message) {
         return String.format("%s: %s", errCode.getErrName(), message);

@@ -3,7 +3,9 @@ package mx.edu.uaz.is.poo2.carger.model.entities;
 import java.io.Serializable;
 
 import jakarta.persistence.*;
+import static jakarta.persistence.CascadeType.*;
 
+@Entity
 public class Player implements IEntity, Serializable {
     private static final long serialVersionUID = 1L;
     
@@ -25,11 +27,12 @@ public class Player implements IEntity, Serializable {
     private int tarjetasRojas;
     @Column
     private int tarjetasAmarillas;
-    @Column
-    @ManyToOne
+    @ManyToOne(cascade={PERSIST, MERGE, REFRESH})
     private Team team;
 
-    public Player() {}
+    public Player() {
+        id = null;
+    }
 
     public Player(String nombre, int edad, Team team) {
         this.nombre = nombre;
@@ -40,29 +43,28 @@ public class Player implements IEntity, Serializable {
         this.asistencias = 0;
         this.tarjetasRojas = 0;
         this.tarjetasAmarillas = 0;
+        this.id = null;
     }
 
     public Player(
         String nombre, 
         int edad, 
+        Team team,
         int partidosJugados,
         int goles, 
         int asistencias,
         int tarjetasRojas, 
-        int tarjetasAmarillas,
-        Team team
+        int tarjetasAmarillas
     ){
-        super();
-        this.nombre = nombre;
-        this.edad = edad;
+        this(nombre, edad, team);
         this.partidosJugados = partidosJugados;
         this.goles = goles;
         this.asistencias = asistencias;
         this.tarjetasRojas = tarjetasRojas;
         this.tarjetasAmarillas = tarjetasAmarillas;
-        this.team = team;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
