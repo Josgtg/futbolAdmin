@@ -5,8 +5,11 @@
 	<persistence-unit name="UPFutbolAdmin" transaction-type="RESOURCE_LOCAL">		
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		
-		<!-- <PONER CLASES AQUI/> -->
-		<!--          <class>mx.edu.uaz.is.poo2.carger.modelo.entidades.Jugador</class>         -->
+		<class>mx.edu.uaz.is.poo2.carger.model.entities.Match</class>
+		<class>mx.edu.uaz.is.poo2.carger.model.entities.Player</class>
+		<class>mx.edu.uaz.is.poo2.carger.model.entities.Team</class>
+		<class>mx.edu.uaz.is.poo2.carger.model.entities.events.Event</class>
+		<class>mx.edu.uaz.is.poo2.carger.model.entities.events.EventKind</class>
 
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>

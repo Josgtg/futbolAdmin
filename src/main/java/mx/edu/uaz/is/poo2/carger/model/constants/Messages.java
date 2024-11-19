@@ -31,7 +31,7 @@ public class Messages {
     public static final String ASK_FOR_ID = "Escribe el ID: ";
     public static final String INVALID_NUMBER = "Número no válido. Intenta de nuevo: ";
     public static final String INVALID_INPUT = "Input no válido. Intenta de nuevo: ";
-    public static final String INVALID_INT_LEN = "Número debe de estar en el rango %d-%d Intenta de nuevo: ";
+    public static final String INVALID_INT_RANGE = "Número debe de estar en el rango %d-%d Intenta de nuevo: ";
     public static final String INVALID_LEN_RANGE = "La longitud del texto debe de estar entre %d y %d. Intenta de nuevo: ";
     public static final String INVALID_FLOAT_RANGE = "Número debe de estar en el rango %f.3-%f.3 Intenta de nuevo: ";
     public static final String NUMBER_CANT_BE_NEGATIVE = "Número no puede ser negativo. Intenta de nuevo: ";
