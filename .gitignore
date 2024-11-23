@@ -3,5 +3,6 @@ futbolAdmin/target/
 futbolAdmin/fulbo.db
 misc/
 out/
-target/
+*./target/*
+*./target/
 fulbo.db
