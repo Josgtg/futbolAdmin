@@ -14,19 +14,19 @@ public class Player implements IEntity, Serializable {
     private Long id;
 
     @Column
-    private String nombre;
+    private String name;
     @Column
-    private int edad;
+    private int age;
     @Column
-    private int partidosJugados;
+    private int gamesPlayed;
     @Column
-    private int goles;
+    private int goals;
     @Column
-    private int asistencias;
+    private int assists;
     @Column
-    private int tarjetasRojas;
+    private int redCards;
     @Column
-    private int tarjetasAmarillas;
+    private int yellowCards;
     @ManyToOne(cascade={PERSIST, MERGE, REFRESH})
     private Team team;
 
@@ -34,34 +34,34 @@ public class Player implements IEntity, Serializable {
         id = null;
     }
 
-    public Player(String nombre, int edad, Team team) {
-        this.nombre = nombre;
-        this.edad = edad;
+    public Player(String name, int age, Team team) {
+        this.name = name;
+        this.age = age;
         this.team = team;
-        this.partidosJugados = 0;
-        this.goles = 0;
-        this.asistencias = 0;
-        this.tarjetasRojas = 0;
-        this.tarjetasAmarillas = 0;
+        this.gamesPlayed = 0;
+        this.goals = 0;
+        this.assists = 0;
+        this.redCards = 0;
+        this.yellowCards = 0;
         this.id = null;
     }
 
     public Player(
-        String nombre, 
-        int edad, 
+        String name, 
+        int age, 
         Team team,
-        int partidosJugados,
-        int goles, 
-        int asistencias,
-        int tarjetasRojas, 
-        int tarjetasAmarillas
+        int gamesPlayed,
+        int goals, 
+        int assists,
+        int redCards, 
+        int yellowCards
     ){
-        this(nombre, edad, team);
-        this.partidosJugados = partidosJugados;
-        this.goles = goles;
-        this.asistencias = asistencias;
-        this.tarjetasRojas = tarjetasRojas;
-        this.tarjetasAmarillas = tarjetasAmarillas;
+        this(name, age, team);
+        this.gamesPlayed = gamesPlayed;
+        this.goals = goals;
+        this.assists = assists;
+        this.redCards = redCards;
+        this.yellowCards = yellowCards;
     }
 
     @Override
@@ -73,60 +73,60 @@ public class Player implements IEntity, Serializable {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getname() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setname(String name) {
+        this.name = name;
     }
 
-    public int getEdad() {
-        return edad;
+    public int getage() {
+        return age;
     }
 
-    public void setEdad(int edad) {
-        this.edad = edad;
+    public void setage(int age) {
+        this.age = age;
     }
 
-    public int getPartidosJugados() {
-        return partidosJugados;
+    public int getgamesPlayed() {
+        return gamesPlayed;
     }
 
-    public void setPartidosJugados(int partidosJugados) {
-        this.partidosJugados = partidosJugados;
+    public void setgamesPlayed(int gamesPlayed) {
+        this.gamesPlayed = gamesPlayed;
     }
 
-    public int getGoles() {
-        return goles;
+    public int getgoals() {
+        return goals;
     }
 
-    public void setGoles(int goles) {
-        this.goles = goles;
+    public void setgoals(int goals) {
+        this.goals = goals;
     }
 
-    public int getAsistencias() {
-        return asistencias;
+    public int getassists() {
+        return assists;
     }
 
-    public void setAsistencias(int asistencias) {
-        this.asistencias = asistencias;
+    public void setassists(int assists) {
+        this.assists = assists;
     }
 
-    public int getTarjetasRojas() {
-        return tarjetasRojas;
+    public int getredCards() {
+        return redCards;
     }
 
-    public void setTarjetasRojas(int tarjetasRojas) {
-        this.tarjetasRojas = tarjetasRojas;
+    public void setredCards(int redCards) {
+        this.redCards = redCards;
     }
 
-    public int getTarjetasAmarillas() {
-        return tarjetasAmarillas;
+    public int getyellowCards() {
+        return yellowCards;
     }
 
-    public void setTarjetasAmarillas(int tarjetasAmarillas) {
-        this.tarjetasAmarillas = tarjetasAmarillas;
+    public void setyellowCards(int yellowCards) {
+        this.yellowCards = yellowCards;
     }
 
     public Team getTeam() {
@@ -135,5 +135,14 @@ public class Player implements IEntity, Serializable {
 
     public void setTeam(Team team) {
         this.team = team;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+            "Player{ name: %s, team: %s, age: %d, gamesPlayed: %d, goals: %d, assists: %d, yellowCards: %d, redCards: %d }",
+            this.name, this.team.getName(), this.age, this.gamesPlayed,
+            this.goals, this.assists, this.yellowCards, this.redCards
+        );
     }
 }

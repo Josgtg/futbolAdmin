@@ -133,4 +133,12 @@ public class Match implements IEntity, Serializable {
     public void removeEvent(Event e) {
         this.events.remove(e);
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+            "Match{ date: %s, gameWeek: %d homeTeam: %s, homeTeamGoals: %d, awayTeam: %s, awayTeamGoals: %d }",
+            this.date, this.gameWeek, this.homeTeam, this.homeTeamGoals, this.awayTeam, this.awayTeamGoals
+        );
+    }
 }
