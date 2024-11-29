@@ -8,6 +8,10 @@ import static jakarta.persistence.CascadeType.*;
 @Entity
 public class Player implements IEntity, Serializable {
     private static final long serialVersionUID = 1L;
+    public static final int MIN_AGE = 0;
+    public static final int MAX_AGE = 128;
+    public static final int MIN_NAME_LEN = 0;
+    public static final int MAX_NAME_LEN= 70;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,20 +34,22 @@ public class Player implements IEntity, Serializable {
     @ManyToOne(cascade={PERSIST, MERGE, REFRESH})
     private Team team;
 
-    public Player() {
-        id = null;
-    }
+    public Player() { }
 
-    public Player(String name, int age, Team team) {
+    public Player(String name, int age) {
         this.name = name;
         this.age = age;
-        this.team = team;
+        this.team = null;
         this.gamesPlayed = 0;
         this.goals = 0;
         this.assists = 0;
         this.redCards = 0;
         this.yellowCards = 0;
-        this.id = null;
+    }
+
+    public Player(String name, int age, Team team) {
+        this(name, age);
+        this.team = team;
     }
 
     public Player(
@@ -73,59 +79,59 @@ public class Player implements IEntity, Serializable {
         this.id = id;
     }
 
-    public String getname() {
+    public String getName() {
         return name;
     }
 
-    public void setname(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public int getage() {
+    public int getAge() {
         return age;
     }
 
-    public void setage(int age) {
+    public void setAge(int age) {
         this.age = age;
     }
 
-    public int getgamesPlayed() {
+    public int getGamesPlayed() {
         return gamesPlayed;
     }
 
-    public void setgamesPlayed(int gamesPlayed) {
+    public void setGamesPlayed(int gamesPlayed) {
         this.gamesPlayed = gamesPlayed;
     }
 
-    public int getgoals() {
+    public int getGoals() {
         return goals;
     }
 
-    public void setgoals(int goals) {
+    public void setGoals(int goals) {
         this.goals = goals;
     }
 
-    public int getassists() {
+    public int getAssists() {
         return assists;
     }
 
-    public void setassists(int assists) {
+    public void setAssists(int assists) {
         this.assists = assists;
     }
 
-    public int getredCards() {
+    public int getRedCards() {
         return redCards;
     }
 
-    public void setredCards(int redCards) {
+    public void setRedCards(int redCards) {
         this.redCards = redCards;
     }
 
-    public int getyellowCards() {
+    public int getYellowCards() {
         return yellowCards;
     }
 
-    public void setyellowCards(int yellowCards) {
+    public void setYellowCards(int yellowCards) {
         this.yellowCards = yellowCards;
     }
 
@@ -138,10 +144,15 @@ public class Player implements IEntity, Serializable {
     }
 
     @Override
+    public String basicToString() {
+        return String.format("%s, Team: %s", this.name, this.getTeam() != null ? this.getTeam().getName() : "NOTEAM");
+    }
+
+    @Override
     public String toString() {
         return String.format(
-            "Player{ name: %s, team: %s, age: %d, gamesPlayed: %d, goals: %d, assists: %d, yellowCards: %d, redCards: %d }",
-            this.name, this.team.getName(), this.age, this.gamesPlayed,
+            "Player{ id: %d, name: %s, team: %s, age: %d, gamesPlayed: %d, goals: %d, assists: %d, yellowCards: %d, redCards: %d }",
+            this.id, this.name, this.team != null ? this.team.getName() : "NOTEAM", this.age, this.gamesPlayed,
             this.goals, this.assists, this.yellowCards, this.redCards
         );
     }

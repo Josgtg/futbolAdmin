@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DAO<T extends IEntity> {
     protected final Class<T> entityClass;
@@ -21,13 +22,17 @@ public class DAO<T extends IEntity> {
         this.log = new Logger(this.getClass().getSimpleName());
     }
 
+    public Optional<T> find(T entity) {
+        return this.executeTransactionWithResult( () -> this.entityManager.find(entityClass, entity.getId()) );
+    }
+
     public List<T> findAll(){
         CriteriaQuery<T> criteriaQuery = this.entityManager.getCriteriaBuilder().createQuery(entityClass);
         criteriaQuery.select(criteriaQuery.from(entityClass));
         return this.entityManager.createQuery(criteriaQuery).getResultList();
     }
 
-    public T findByID(Long id){
+    public Optional<T> findByID(Long id){
         return this.executeTransactionWithResult( () -> this.entityManager.find(entityClass, id) );
     }
 
@@ -39,23 +44,23 @@ public class DAO<T extends IEntity> {
         return this.executeTransactionWithResult( () -> this.entityManager.find(entityClass, id) ) != null;
     }
 
-    public T save(T entidad){
+    public Optional<T> save(T entidad){
         return this.executeTransactionWithResult(() -> {
             this.entityManager.persist(entidad);
             return entidad;
         });
     }
 
-    public T update(T entidad){
+    public Optional<T> update(T entidad){
         return this.executeTransactionWithResult(() -> entityManager.merge(entidad));
     }
 
-    private T executeTransactionWithResult(DBExecute<T> comando){
+    private Optional<T> executeTransactionWithResult(DBExecute<T> comando){
         try{
             this.entityManager.getTransaction().begin();
             T salida = comando.executeDBCommand();
             this.entityManager.getTransaction().commit();
-            return salida;
+            return Optional.ofNullable(salida);
         } catch (Exception e) {
             log.warnf(ErrorKind.QUERY_NOT_EXECUTED, Errors.QUERY_NOT_EXECUTED, e);
             this.entityManager.getTransaction().rollback();

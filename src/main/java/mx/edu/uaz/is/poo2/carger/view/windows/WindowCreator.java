@@ -2,64 +2,138 @@ package mx.edu.uaz.is.poo2.carger.view.windows;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import mx.edu.uaz.is.poo2.carger.controller.Controller;
-import mx.edu.uaz.is.poo2.carger.model.entities.Match;
-import mx.edu.uaz.is.poo2.carger.model.entities.Team;
+import mx.edu.uaz.is.poo2.carger.model.entities.*;
+import mx.edu.uaz.is.poo2.carger.view.windows.consult.*;
+import mx.edu.uaz.is.poo2.carger.view.windows.schedule.*;
+import mx.edu.uaz.is.poo2.carger.view.windows.selection.*;
+import mx.edu.uaz.is.poo2.carger.view.windows.crud.*;
 
 public class WindowCreator {
 
-    private Optional<LeagueWindow> leagueWindow;
-    private Optional<LoginWindow> loginWindow;
-    private Optional<MatchWindow> matchWindow;
-    private Optional<PlayerWindow> playerWindow;
-    private Optional<TeamWindow> teamWindow;
+    // Consult
+    private static LeagueWindow leagueWindow;
+    private static MatchWindow matchWindow;
+    private static PlayerWindow playerWindow;
+    private static TeamWindow teamWindow;
+    private static EventWindow eventWindow;
+    // Login
+    private static LoginWindow loginWindow;
+    private static AdminWindow adminWindow;
+    // CRUDSelect
+    private static CRUDSelectWindow crudSelectWindow;
+    // CRUD
+    private static MatchCRUDWindow matchCRUDWindow;
+    private static PlayerCRUDWindow playerCRUDWindow;
+    private static TeamCRUDWindow teamCRUDWindow;
+    // Schedule
+    private static ScheduleWindow scheduleWindow;
+    private static MatchAdminWindow matchAdminWindow;
+    // MatchFill
+    private static MatchFillWindow matchFillWindow;
 
-    public WindowCreator() {
-        this.leagueWindow = Optional.empty();
-        this.loginWindow = Optional.empty();
-        this.matchWindow = Optional.empty();
-        this.playerWindow = Optional.empty();
-        this.teamWindow = Optional.empty();
-    }
+    // ConsultController
 
-    public LeagueWindow getLeagueWindow(Controller controller, List<Team> teams) {
+    public static LeagueWindow getLeagueWindow(List<Team> teams) {
         // Teams are already in order
-        if (this.leagueWindow.isEmpty())
-            this.leagueWindow = Optional.of(new LeagueWindow(controller, teams));
-        return this.leagueWindow.get();
+        if (leagueWindow == null)
+            leagueWindow = new LeagueWindow(teams);
+        return leagueWindow;
     }
 
-    public LeagueWindow getLeagueWindow(Controller controller) {
-        return this.getLeagueWindow(controller, new ArrayList<>());
+    public static LeagueWindow getLeagueWindow() {
+        return getLeagueWindow(new ArrayList<>());
     }
 
-    public LoginWindow getLoginWindow(Controller controller) {
-        if (this.loginWindow.isEmpty())
-            this.loginWindow = Optional.of(new LoginWindow(controller));
-        return this.loginWindow.get();
+    public static MatchWindow getMatchWindow(List<Match> matches) {
+        if (matchWindow == null)
+            matchWindow = new MatchWindow(matches);
+        return matchWindow;
     }
 
-    public MatchWindow getMatchWindow(Controller controller, List<Match> matches) {
-        if (this.matchWindow.isEmpty())
-            this.matchWindow = Optional.of(new MatchWindow(controller, matches));
-        return this.matchWindow.get();
+    public static MatchWindow getMatchWindow() {
+        return getMatchWindow(new ArrayList<>());
     }
 
-    public MatchWindow getMatchWindow(Controller controller) {
-        return this.getMatchWindow(controller, new ArrayList<>());
+    public static PlayerWindow getPlayerWindow() {
+        if (playerWindow == null)
+            playerWindow = new PlayerWindow();
+        return playerWindow;
     }
 
-    public PlayerWindow getPlayerWindow(Controller controller) {
-        if (this.playerWindow.isEmpty())
-            this.playerWindow = Optional.of(new PlayerWindow(controller));
-        return this.playerWindow.get();
+    public static TeamWindow getTeamWindow() {
+        if (teamWindow == null)
+            teamWindow = new TeamWindow();
+        return teamWindow;
     }
 
-    public TeamWindow getTeamWindow(Controller controller) {
-        if (this.teamWindow.isEmpty())
-            this.teamWindow = Optional.of(new TeamWindow(controller));
-        return this.teamWindow.get();
+    public static EventWindow getEventWindow() {
+        if (eventWindow == null)
+            eventWindow = new EventWindow();
+        return eventWindow;
+    }
+
+    // 
+
+    public static LoginWindow getLoginWindow() {
+        if (loginWindow == null)
+            loginWindow = new LoginWindow();
+        return loginWindow;
+    }
+
+
+    public static AdminWindow getAdminWindow() {
+        if (adminWindow == null)
+            adminWindow = new AdminWindow();
+        return adminWindow;
+    }
+
+    // CRUDSelect
+
+    public static CRUDSelectWindow getCRUDSelectWindow() {
+        if (crudSelectWindow == null)
+            crudSelectWindow = new CRUDSelectWindow();
+        return crudSelectWindow;
+    }
+
+    // CRUD
+
+    public static MatchCRUDWindow getMatchCRUDWindow() {
+        if (matchCRUDWindow == null)
+            matchCRUDWindow = new MatchCRUDWindow();
+        return matchCRUDWindow;
+    }
+
+    public static PlayerCRUDWindow getPlayerCRUDWindow() {
+        if (playerCRUDWindow == null)
+            playerCRUDWindow = new PlayerCRUDWindow();
+        return playerCRUDWindow;
+    }
+
+    public static TeamCRUDWindow getTeamCRUDWindow() {
+        if (teamCRUDWindow == null)
+            teamCRUDWindow = new TeamCRUDWindow();
+        return teamCRUDWindow;
+    }
+
+    // Schedule
+    public static ScheduleWindow getScheduleWindow() {
+        if (scheduleWindow == null)
+            scheduleWindow = new ScheduleWindow();
+        return scheduleWindow;
+    }
+
+    public static MatchAdminWindow getMatchAdminWindow() {
+        if (matchAdminWindow == null)
+            matchAdminWindow = new MatchAdminWindow();
+        return matchAdminWindow;
+    }
+
+    //MatchFill
+    public static MatchFillWindow getMatchFillWindow() {
+        if (matchFillWindow == null){
+            matchFillWindow = new MatchFillWindow();
+        }
+        return matchFillWindow;
     }
 }

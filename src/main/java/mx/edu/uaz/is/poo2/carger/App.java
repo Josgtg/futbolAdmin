@@ -1,29 +1,30 @@
 package mx.edu.uaz.is.poo2.carger;
 
-import java.util.ArrayList;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Persistence;
-import mx.edu.uaz.is.poo2.carger.controller.ConsultController;
 import mx.edu.uaz.is.poo2.carger.controller.ControllerCreator;
-import mx.edu.uaz.is.poo2.carger.model.daos.TeamDAO;
-import mx.edu.uaz.is.poo2.carger.model.entities.Player;
-import mx.edu.uaz.is.poo2.carger.model.entities.Team;
+import mx.edu.uaz.is.poo2.carger.services.CSVImport;
 
 public class App {
+
+    public static void assembleAll() {
+        ControllerCreator.getConsultController();
+        ControllerCreator.getLoginController();
+        ControllerCreator.getScheduleController();
+        ControllerCreator.getCRUDSelectController();
+        ControllerCreator.getMatchFillController();
+        ControllerCreator.setAllCRUDController();
+    }
+
+    public static void startMainWindow() {
+        ControllerCreator.getConsultController().startLeagueWindow();
+    }
+
+    public static void fillAllTables() {
+        new CSVImport().fillAllTables();
+    }
+
     public static void main(String[] args) {
-        EntityManager em = Persistence.createEntityManagerFactory("UPFutbolAdmin").createEntityManager();
-        TeamDAO tdao = new TeamDAO(em);
-        ArrayList<Player> players = new ArrayList<>();
-        players.add(new Player());
-        var t = new Team("Madri", players);
-        tdao.save(t);
-
-        ControllerCreator creator = new ControllerCreator();
-        creator.initializeAll(tdao.findAll(), new ArrayList<>());
-
-        ConsultController consultCtrl = creator.getConsultController();
-
-        consultCtrl.start();
+        fillAllTables();
+        assembleAll();
+        startMainWindow();
     }
 }

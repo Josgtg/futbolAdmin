@@ -17,22 +17,28 @@ public class Messages {
     public static final String SELECCION_OPTIONS = "Escribe el número con la opción elegida: ";
     public static final String ID_CREATED_MESSAGE = "\nIMPORTANTE: El elemento creado tiene id: " ;
     public static final String ID_NOT_FOUND = "\nNo hay ningún elemento con el id dado" ;
-    public static final String ENTITY_UPDATED = "\nElemento actualizado";
     public static final String CANT_DELETE_ENTITY = "no se pudo eliminar";
-    public static final String ENTITY_DELETED = "\nElemento eliminado";
     public static final String FAILED_TO_FETCH = "no se pudo consultar";
     public static final String NO_ELEMENTS = "No hay elementos en la tabla";
-
     public static final String CONNECTED_TO_DB = "Se ha conectado a la base de datos";
     public static final String TABLES_CREATED = "Tablas creadas exitosamente";
 
     public static final String CANT_BE_EMPTY = "Dato no puede estar vacío";
 
+    public static final String ASK_FOR_DATE = "Escribe la fecha en formato \"aaaa-mm-dd hh:mm:ss\": ";
+    public static final String INVALID_DATE = "La fecha especificada no es válida.";
     public static final String ASK_FOR_ID = "Escribe el ID: ";
     public static final String INVALID_NUMBER = "Número no válido. Intenta de nuevo: ";
     public static final String INVALID_INPUT = "Input no válido. Intenta de nuevo: ";
-    public static final String INVALID_INT_RANGE = "Número debe de estar en el rango %d-%d Intenta de nuevo: ";
+    public static final String INVALID_INT_RANGE = "Número debe de estar en el rango %d a %d Intenta de nuevo: ";
     public static final String INVALID_LEN_RANGE = "La longitud del texto debe de estar entre %d y %d. Intenta de nuevo: ";
-    public static final String INVALID_FLOAT_RANGE = "Número debe de estar en el rango %f.3-%f.3 Intenta de nuevo: ";
+    public static final String INVALID_FLOAT_RANGE = "Número debe de estar en el rango %f.3 a %f.3 Intenta de nuevo: ";
+    public static final String INVALID_Y_OR_N = "El valor escrito debe ser \"s\" o \"n\". Intenta de nuevo: ";
     public static final String NUMBER_CANT_BE_NEGATIVE = "Número no puede ser negativo. Intenta de nuevo: ";
+
+    public static final String ENTITY_SAVED = "El elemento ha sido guardado.";
+    public static final String ENTITY_UPDATED = "El elemento ha sido actualizado.";
+    public static final String ENTITY_DELETED = "El elemento ha sido elimindado.";
+
+    public static final String NO_EVENTS = "No hay eventos para consultar.";
 }

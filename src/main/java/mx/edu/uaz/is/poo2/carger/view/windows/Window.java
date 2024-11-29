@@ -1,25 +1,28 @@
 package mx.edu.uaz.is.poo2.carger.view.windows;
 
+import java.sql.Timestamp;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.function.Function;
 import java.util.List;
 
 import mx.edu.uaz.is.poo2.carger.controller.Controller;
-import  mx.edu.uaz.is.poo2.carger.view.Logger;
-import mx.edu.uaz.is.poo2.carger.model.constants.Errors;
 import mx.edu.uaz.is.poo2.carger.model.constants.ErrorKind;
+import mx.edu.uaz.is.poo2.carger.view.Logger;
+import mx.edu.uaz.is.poo2.carger.model.constants.Errors;
 import mx.edu.uaz.is.poo2.carger.model.constants.Messages;
+import mx.edu.uaz.is.poo2.carger.model.entities.IEntity;
 
-public abstract class Window {
-    protected Controller controller;
+public abstract class Window<C extends Controller> {
+    protected C controller;
+    public final String TITLE;
     private final Scanner scanner;
     protected final Logger logger;
 
-    public Window(Controller controller) {
+    protected Window(String title) {
+        this.TITLE = title;
         this.scanner = new Scanner(System.in);
         this.logger = new Logger(Window.class.getSimpleName());
-        this.controller = controller;
     }
 
     public void close() {
@@ -42,19 +45,26 @@ public abstract class Window {
         this.println(Errors.format(errorKind, errorMessage, error));
     }
 
-    public <T> T readGeneric(String message, Function<String, T> converter) {
+    public String readLine() {
+        return this.scanner.nextLine().trim();
+    }
+
+    protected <T> T readGeneric(String message, Function<String, T> converter) {
         T data;
         String input;
         while (true) {
             this.print(message);
             try {
-                input = this.scanner.nextLine().trim();
+                input = this.readLine();
+                if (input.equals("0m"))
+                    continue;
                 data = converter.apply(input);
                 return data;
             } catch (IllegalStateException | NoSuchElementException e) {
                 logger.warnf(ErrorKind.INPUT_ERROR, Errors.INPUT_ERROR, e);
+                this.printerr(ErrorKind.INPUT_ERROR, Errors.INPUT_ERROR);
             } catch (Exception e) {
-                this.printerr(ErrorKind.PARSE_ERROR, Errors.PARSE_ERROR);
+                this.printerr(ErrorKind.PARSE_ERROR, Errors.INPUT_ERROR);
             }
         }
     }
@@ -71,16 +81,24 @@ public abstract class Window {
         }
     }
 
-    public Long readId() {
+    public Long readId(String message, Long lo, Long hi) {
         Long data;
         while (true) { 
-            data = this.readGeneric(Messages.ASK_FOR_ID, Long::parseLong);
-            if (data < 0) {
+            data = this.readGeneric(message, Long::parseLong);
+            if (data < lo || data > hi) {
                 this.printerr(ErrorKind.INPUT_ERROR, Messages.INVALID_NUMBER);
                 continue;
             }
             return data;
         }
+    }
+
+    public Long readId(String message) {
+        return this.readId(message, 0L, Long.MAX_VALUE);
+    }
+
+    public Long readId() {
+        return this.readId(Messages.ASK_FOR_ID, 0L, Long.MAX_VALUE);
     }
 
     public double readDouble(String message, double lo, double hi) {
@@ -107,6 +125,14 @@ public abstract class Window {
         }
     }
 
+    public <E extends IEntity> String basicListAsNumeratedStr(List<E> options) {
+        var str = new StringBuilder();
+        for (int i = 0; i < options.size(); i++) {
+            str.append(String.format("%d. %s\n", i + 1, options.get(i).basicToString()));
+        }
+        return str.toString();
+    }
+
     public <T> String listAsNumeratedStr(List<T> options) {
         var str = new StringBuilder();
         for (int i = 0; i < options.size(); i++) {
@@ -115,5 +141,38 @@ public abstract class Window {
         return str.toString();
     }
 
-    public abstract void mainView();
+    public Timestamp readDate() {
+        String dateString;
+        while (true) {
+            this.println(Messages.ASK_FOR_DATE);
+            dateString = this.readLine();
+            try {
+                return Timestamp.valueOf(dateString);
+            } catch (IllegalArgumentException e) {
+                this.printerr(ErrorKind.PARSE_ERROR, Messages.INVALID_DATE);
+            }
+        }
+    }
+
+    @SuppressWarnings("ConvertToStringSwitch")
+    protected boolean askYesOrNo(String message) {
+        String input;
+        while (true) { 
+            this.print(message);
+            input = this.readLine().toLowerCase();
+            if (input.equals("s"))
+                return true;
+            else if (input.equals("n"))
+                return false;
+            else
+                this.printerr(ErrorKind.INPUT_ERROR, Messages.INVALID_Y_OR_N);
+        }
+    }
+
+    public void setController(C controller) {
+        this.controller = controller;
+    }
+
+    public abstract void start();
+
 }

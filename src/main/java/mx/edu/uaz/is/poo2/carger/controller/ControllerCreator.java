@@ -1,60 +1,121 @@
 package mx.edu.uaz.is.poo2.carger.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import mx.edu.uaz.is.poo2.carger.model.entities.Match;
-import mx.edu.uaz.is.poo2.carger.model.entities.Team;
-import mx.edu.uaz.is.poo2.carger.view.windows.*;
+import static mx.edu.uaz.is.poo2.carger.view.windows.WindowCreator.*;
+import mx.edu.uaz.is.poo2.carger.model.entities.*;
+import mx.edu.uaz.is.poo2.carger.controller.crud.*;
+import mx.edu.uaz.is.poo2.carger.controller.view.*;
+import mx.edu.uaz.is.poo2.carger.model.constants.CRUDTable;
+import static mx.edu.uaz.is.poo2.carger.services.dao.DAOServiceFactory.*;
 
 public class ControllerCreator {
-    private final PrivateController<ConsultController> consultController;
-    private final PrivateController<LoginController> loginController;
-    private final WindowCreator windowCreator;
+    private static ConsultController consultController;
+    private static LoginController loginController;
+    private static CRUDSelectController crudSelectController;
+    private static ScheduleController scheduleController;
+    private static MatchFillController matchFillController;
 
-    public ControllerCreator() {
-        this.consultController = new PrivateController(new ConsultController());
-        this.loginController = new PrivateController(new LoginController());
-        this.windowCreator = new WindowCreator();
-    }
+    public static ConsultController getConsultController() {
+        if (consultController == null) {
+            consultController = new ConsultController(getTeamDAOService(), getMatchDAOService(), getPlayerDAOService());
 
-    public ConsultController getConsultController(List<Team> leagueTeams, List<Match> matches) {
-        if (!this.consultController.isInitialized) {
-            this.consultController.ctrl.setLeagueWindow(this.windowCreator.getLeagueWindow(this.consultController.ctrl, leagueTeams));
-            this.consultController.ctrl.setMatchWindow(this.windowCreator.getMatchWindow(this.consultController.ctrl, matches));
-            this.consultController.ctrl.setPlayerWindow(this.windowCreator.getPlayerWindow(this.consultController.ctrl));
-            this.consultController.ctrl.setTeamWindow(this.windowCreator.getTeamWindow(this.consultController.ctrl));
-            this.consultController.ctrl.setLoginWindow(this.windowCreator.getLoginWindow(this.getLoginController()));
-            this.consultController.isInitialized = true;
+            consultController.setLeagueWindow(getLeagueWindow());
+            getLeagueWindow().setController(consultController);
+
+            consultController.setMatchWindow(getMatchWindow());
+            getMatchWindow().setController(consultController);
+
+            consultController.setPlayerWindow(getPlayerWindow());
+            getPlayerWindow().setController(consultController);
+
+            consultController.setTeamWindow(getTeamWindow());
+            getTeamWindow().setController(consultController);
+
+            consultController.setEventWindow(getEventWindow());
+            getEventWindow().setController(consultController);
+
+            consultController.setLoginWindow(getLoginWindow());
+
+
         }
-        return this.consultController.ctrl;
+        return consultController;
     }
 
-    public ConsultController getConsultController() {
-        return this.getConsultController(new ArrayList<>(), new ArrayList<>());
-    }
+    public static LoginController getLoginController() {
+        if (loginController == null) {
+            loginController = new LoginController();
+            
+            loginController.setLeagueWindow(getLeagueWindow());
+            
+            loginController.setLoginWindow(getLoginWindow());
+            getLoginWindow().setController(loginController);
+            
+            loginController.setAdminWindow(getAdminWindow());
+            getAdminWindow().setController(loginController);
 
-    public LoginController getLoginController() {
-        if (!this.loginController.isInitialized) {
-            this.loginController.ctrl.setLoginWindow(this.windowCreator.getLoginWindow(this.loginController.ctrl));
-            this.loginController.ctrl.setLeagueWindow(this.windowCreator.getLeagueWindow(this.consultController.ctrl));
-            this.loginController.isInitialized = true;
+            loginController.setScheduleWindow(getScheduleWindow());
+
+            loginController.setCRUDSelectWindow(getCRUDSelectWindow());
+
+            loginController.setMatchFillWindow(getMatchFillWindow());
         }
-        return this.loginController.ctrl;
+        return loginController;
     }
 
-    public void initializeAll(List<Team> leagueTeams, List<Match> matches) {
-        this.getConsultController(leagueTeams, matches);
-        this.getLoginController();
+    public static CRUDSelectController getCRUDSelectController() {
+        if (crudSelectController == null) {
+            crudSelectController = new CRUDSelectController();
+
+            crudSelectController.setLeagueWindow(getLeagueWindow());
+            crudSelectController.setAdminWindow(getAdminWindow());
+
+            crudSelectController.setTeamWindow(getTeamCRUDWindow());
+            crudSelectController.setPlayerWindow(getPlayerCRUDWindow());
+            crudSelectController.setMatchWindow(getMatchCRUDWindow());
+            crudSelectController.setEventWindow(getEventWindow());
+
+            crudSelectController.setCRUDSelectWindow(getCRUDSelectWindow());
+            getCRUDSelectWindow().setController(crudSelectController);
+        }
+        return crudSelectController;
     }
-}
 
-class PrivateController<C extends Controller> {
-    public C ctrl;
-    public Boolean isInitialized;
+    public static <E extends IEntity> CRUDController<E> getCRUDController(CRUDTable table) {
+        CRUDController<E> crudController = new CRUDController<>(getDAOService(table));
+        crudController.setLeagueWindow(getLeagueWindow());
+        crudController.setMatchWindow(getMatchWindow());
+        crudController.setPlayerWindow(getPlayerWindow());
+        crudController.setTeamWindow(getTeamWindow());
+        crudController.setPlayerCRUDWindow(getPlayerCRUDWindow());
+        return crudController;
+    }
 
-    public PrivateController(C ctrl) {
-        this.ctrl = ctrl;
-        this.isInitialized = false;
+    public static ScheduleController getScheduleController() {
+        if (scheduleController == null) {
+            scheduleController = new ScheduleController(getMatchDAOService(), getTeamDAOService());
+
+            scheduleController.setMatchWindow(getMatchAdminWindow());
+            scheduleController.setEventWindow(getEventWindow());
+
+            getMatchAdminWindow().setController(scheduleController);
+            getScheduleWindow().setController(scheduleController);
+        }
+        return scheduleController;
+    }
+
+    public static MatchFillController getMatchFillController() {
+        if (matchFillController == null) {
+            matchFillController = new MatchFillController(getMatchDAOService(), getTeamDAOService());
+
+            matchFillController.setMatchFillWindow(getMatchFillWindow());
+            
+            getMatchFillWindow().setController(matchFillController);
+        }
+        return matchFillController;
+    }
+
+    public static void setAllCRUDController() {
+        getTeamCRUDWindow().setController(getCRUDController(CRUDTable.TEAM));
+        getPlayerCRUDWindow().setController(getCRUDController(CRUDTable.PLAYER));
+        getMatchCRUDWindow().setController(getCRUDController(CRUDTable.MATCH));
     }
 }

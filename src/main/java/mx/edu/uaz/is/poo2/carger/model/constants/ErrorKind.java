@@ -11,7 +11,8 @@ public enum ErrorKind {
     ENTITY_NOT_FOUND(51, "EntityNotFound"),
     PARSE_ERROR(200, "ParseError"),
     SQLITE_ERROR(100, "SQLiteError"),
-    INPUT_ERROR(201, "InputError");
+    INPUT_ERROR(201, "InputError"),
+    IO_ERROR(500, "IOError");
 
     private final int code;
     private final String errName;

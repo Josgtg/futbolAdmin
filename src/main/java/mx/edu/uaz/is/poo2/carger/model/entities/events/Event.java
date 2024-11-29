@@ -90,4 +90,9 @@ public class Event implements IEntity, Serializable {
     public void setMinute(int minute) {
         this.minute = minute;
     }
+
+    @Override
+    public String basicToString() {
+        return String.format("Event{ kind: %s }", this.eventKind);
+    }
 }
