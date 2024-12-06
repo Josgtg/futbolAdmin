@@ -30,8 +30,17 @@ public class MatchFillController extends Controller{
         var matches = this.daoM.findAll();
         this.matchFillWindow.setMatches(matches);
     }
+    public void setMatchFillWindowMatchesNotPlayed() {
+        var matches = this.daoM.findNotPlayed();
+        this.matchFillWindow.setMatches(matches);
+    }
+    public void setMatchFillWindowMatchesPlayed() {
+        var matches = this.daoM.findPlayed();
+        this.matchFillWindow.setMatches(matches);
+    }
     public Optional<Match> updateMatch (Match match){
         return this.daoM.update(match);
+        
     }
     
 }

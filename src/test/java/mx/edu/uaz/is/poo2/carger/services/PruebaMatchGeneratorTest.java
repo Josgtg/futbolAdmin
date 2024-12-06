@@ -5,19 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.*;
 
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Persistence;
-import mx.edu.uaz.is.poo2.carger.model.daos.MatchDAO;
+import mx.edu.uaz.is.poo2.carger.services.dao.*;
 import mx.edu.uaz.is.poo2.carger.model.entities.Match;
 import mx.edu.uaz.is.poo2.carger.model.entities.Team;
 
 public class PruebaMatchGeneratorTest {
     @Test
     public void testGen() {
-        EntityManager em = Persistence.createEntityManagerFactory("UPFutbolAdmin").createEntityManager();
-        MatchDAO mdao = new MatchDAO(em);
-
+        MatchDAOService mdao = DAOServiceFactory.getMatchDAOService();
 
         ArrayList<Team> equipos = new ArrayList<>();
         List<Match> calendar;
@@ -38,7 +33,5 @@ public class PruebaMatchGeneratorTest {
         for (Match match : calendar) {
             System.out.println("date: " + match.getDate() +", gameweek: " +match.getGameWeek()+", "+ match.getHomeTeam().getName() +" vs " + match.getAwayTeam().getName() );    
         }
-        
-
     }
 }

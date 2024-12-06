@@ -14,6 +14,11 @@ public class MatchCRUDWindow extends CRUDWindow<Match> {
     }
 
     @Override
+    public boolean askOptions() {
+        return this.askOptions(new String[]{"Consultar", "Guardar", "Actualizar"});
+    }
+
+    @Override
     public void showWindow() {
         this.controller.startMatchWindow();
     }
@@ -27,7 +32,7 @@ public class MatchCRUDWindow extends CRUDWindow<Match> {
         Long homeId;
         while (home.isEmpty()) {
             homeId = this.readId("ID del equipo local (Escribe 0 para no añadir equipo local): ");
-            if (homeId == 0)
+            if (homeId == 0L)
                 break;
             home = this.controller.getEntity(homeId, CRUDTable.TEAM);
         }
@@ -36,12 +41,12 @@ public class MatchCRUDWindow extends CRUDWindow<Match> {
         Long awayId;
         while (away.isEmpty()) {
             awayId = this.readId("ID del equipo visitante (Escribe 0 para no añadir equipo visitante): ");
-            if (awayId == 0)
+            if (awayId == 0L)
                 break;
             away = this.controller.getEntity(awayId, CRUDTable.TEAM);
         }
         
-        return new Match(date, gameWeek, home.get(), away.get());
+        return new Match(date, gameWeek, home.orElse(null), away.orElse(null));
     }
 
     @Override

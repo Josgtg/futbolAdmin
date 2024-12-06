@@ -13,15 +13,23 @@ public class PlayerCRUDWindow extends CRUDWindow<Player> {
 
     @Override
     public void showWindow() {
-        this.controller.startPlayerWindow();
+        this.controller.startPlayerWindow(Integer.MAX_VALUE, true);
     }
 
     @Override
     public Player readEntity() {
+        return this.readEntity(null);
+    }
+
+
+    public Player readEntity(Team t) {
         String name = this.readString("Nombre: ", Player.MIN_NAME_LEN, Player.MAX_NAME_LEN);
 
         int age = this.readInt("Edad: ", Player.MIN_AGE, Player.MAX_AGE);
 
+        if (t != null)
+            return new Player(name, age, t);
+        
         Optional<Team> team = Optional.empty();
         Long teamId = 0L;
         while (team.isEmpty()) {

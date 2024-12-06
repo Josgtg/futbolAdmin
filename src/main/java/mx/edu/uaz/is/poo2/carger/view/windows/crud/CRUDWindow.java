@@ -10,6 +10,7 @@ import mx.edu.uaz.is.poo2.carger.model.constants.ErrorKind;
 import mx.edu.uaz.is.poo2.carger.model.constants.Messages;
 import mx.edu.uaz.is.poo2.carger.model.constants.WindowMessages;
 import mx.edu.uaz.is.poo2.carger.model.entities.IEntity;
+import mx.edu.uaz.is.poo2.carger.model.entities.Player;
 import mx.edu.uaz.is.poo2.carger.view.windows.*;
 
 public abstract class CRUDWindow<T extends IEntity> extends Window<CRUDController<T>> {
@@ -30,7 +31,10 @@ public abstract class CRUDWindow<T extends IEntity> extends Window<CRUDControlle
     }
     
     protected boolean askOptions() {
-        String[] options = new String[]{"Consultar", "Guardar", "Actualizar", "Borrar"};
+        return this.askOptions(new String[]{"Consultar", "Guardar", "Actualizar", "Borrar"});
+    }
+
+    protected boolean askOptions(String[] options) {
         this.println(WindowMessages.ASK_FOR_ACTION);
         this.println(this.listAsNumeratedStr(Arrays.asList(options)));
         int option = this.readInt(WindowMessages.ASK_FOR_OPTION_OR_RETURN, 0, options.length);
@@ -49,6 +53,10 @@ public abstract class CRUDWindow<T extends IEntity> extends Window<CRUDControlle
 
     private void saveEntity() {
         T entity = this.readEntity();
+        if (entity instanceof Player player) {
+            this.controller.savePlayer(player);
+            return;
+        }
         if (this.controller.save(entity).isPresent())
             this.println(Messages.ENTITY_SAVED);
         else

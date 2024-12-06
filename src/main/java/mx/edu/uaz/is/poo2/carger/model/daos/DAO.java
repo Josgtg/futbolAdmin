@@ -1,5 +1,7 @@
 package mx.edu.uaz.is.poo2.carger.model.daos;
 
+import java.util.ArrayList;
+
 import mx.edu.uaz.is.poo2.carger.model.constants.Errors;
 import mx.edu.uaz.is.poo2.carger.model.constants.ErrorKind;
 import mx.edu.uaz.is.poo2.carger.model.entities.IEntity;
@@ -10,6 +12,8 @@ import jakarta.persistence.EntityManager;
 
 import java.util.List;
 import java.util.Optional;
+
+import jakarta.persistence.Query;
 
 public class DAO<T extends IEntity> {
     protected final Class<T> entityClass;
@@ -80,6 +84,32 @@ public class DAO<T extends IEntity> {
             return false;
         }
     }
+
+    public List<T> multipleResultQuery(String queryStr, Object... parameters) {
+        Query query = this.entityManager.createNativeQuery(queryStr);
+        for (int i = 1; i <= parameters.length; i++)
+            query.setParameter(i, parameters[i - 1]);
+        List<Object[]> results =  query.getResultList();
+        List<T> entities = new ArrayList<>();
+        Optional<T> entity;
+        for (Object[] entityData : results) {
+            entity = this.findByID(Integer.toUnsignedLong((int) entityData[0]));
+            if (entity.isPresent())
+                entities.add(entity.get());
+        }
+        return entities;
+    } 
+
+    public Optional<T> resultQuery(String queryStr, Object... parameters) {
+        Query query = this.entityManager.createNativeQuery(queryStr);
+        for (int i = 1; i <= parameters.length; i++)
+            query.setParameter(i, parameters[i - 1]);
+        List<Object[]> results = query.getResultList();
+        if (results.isEmpty())
+            return Optional.empty();
+        Object[] entityData = results.get(0);
+        return this.findByID(Integer.toUnsignedLong((int) entityData[0]));
+    } 
 }
 
 interface DBJustExecute {

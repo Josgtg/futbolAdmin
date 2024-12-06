@@ -14,7 +14,12 @@ public class TeamCRUDWindow extends CRUDWindow<Team> {
 
     @Override
     public void showWindow() {
-        this.controller.startTeamWindow();
+        this.controller.startTeamWindow(true);
+    }
+
+    @Override
+    public boolean askOptions() {
+        return this.askOptions(new String[]{"Consultar", "Guardar", "Actualizar"});
     }
 
     @Override
@@ -44,7 +49,7 @@ public class TeamCRUDWindow extends CRUDWindow<Team> {
 
         Player player;
         if (id == 0) {
-            player = this.controller.readPlayerFromUser();
+            player = this.controller.readPlayerFromUser(team);
         } else {
             Optional<Player> playerOpt = this.controller.getEntity(id, CRUDTable.PLAYER);
             if (playerOpt.isPresent()) {

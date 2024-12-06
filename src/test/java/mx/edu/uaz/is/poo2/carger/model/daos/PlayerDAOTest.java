@@ -29,7 +29,7 @@ public class PlayerDAOTest {
         this.tdao = new TeamDAO(this.em);
         this.mdao = new MatchDAO(this.em);
         this.p = new Player("Juan", 19);
-        this.t = new Team("Madrid");
+        this.t = new Team("Urracas de Jerez");
         this.m = new Match(Timestamp.valueOf("2024-12-23 00:00:00"), 1);
     }
 

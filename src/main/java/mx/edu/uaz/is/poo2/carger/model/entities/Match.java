@@ -30,6 +30,8 @@ public class Match implements IEntity, Serializable {
     @Column
     private boolean isPlayed;
     @Column
+    private boolean isAnalized;
+    @Column
     private int homeTeamGoals;
     @Column
     private int awayTeamGoals;
@@ -42,6 +44,7 @@ public class Match implements IEntity, Serializable {
         this.date = date;
         this.gameWeek = gameWeek;
         this.isPlayed = false;
+        this.isAnalized = false;
     } 
 
     public Match(Timestamp date, int gameWeek, Team homeTeam, Team awayTeam) {
@@ -51,6 +54,7 @@ public class Match implements IEntity, Serializable {
         this.homeTeamGoals = 0;
         this.awayTeamGoals = 0;
         this.isPlayed = false;
+        this.isAnalized = false;
         this.events = new ArrayList<>();
     }
 
@@ -128,12 +132,20 @@ public class Match implements IEntity, Serializable {
         this.homeTeamGoals = homeTeamGoals;
     }
 
+    public void sumHomeTeamGoals(int sum) {
+        this.homeTeamGoals += sum;
+    }
+
     public int getAwayTeamGoals() {
         return awayTeamGoals;
     }
 
     public void setAwayTeamGoals(int awayTeamGoals) {
         this.awayTeamGoals = awayTeamGoals;
+    }
+
+    public void sumAwayTeamGoals(int sum) {
+        this.awayTeamGoals += sum;
     }
 
     public List<Event> getEvents() {
@@ -173,5 +185,13 @@ public class Match implements IEntity, Serializable {
             this.id, this.date, this.gameWeek, this.homeTeam != null ? this.homeTeam.getName() : "NOTEAM",
             this.homeTeamGoals, this.awayTeam != null ? this.awayTeam.getName() : "NOTEAM", this.awayTeamGoals, this.isPlayed ? "Ya jugado" : "Aun no jugado"
         );
+    }
+
+    public boolean isAnalized() {
+        return isAnalized;
+    }
+
+    public void setAnalized(boolean isAnalized) {
+        this.isAnalized = isAnalized;
     }
 }

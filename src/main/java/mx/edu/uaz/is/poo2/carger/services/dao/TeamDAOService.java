@@ -12,11 +12,6 @@ public class TeamDAOService extends DAOService<Team> {
     }
 
     public Optional<Team> findByName(String name) {
-        Optional team = Optional.empty();
-        for (Team t : this.findAll()) {
-            if (t.getName().equals(name))
-                team = Optional.of(t);
-        }
-        return team;
+        return this.dao.resultQuery("SELECT * FROM team WHERE name = ?;", name);
     }
 }

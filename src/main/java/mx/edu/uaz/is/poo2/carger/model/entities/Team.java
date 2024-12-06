@@ -36,7 +36,7 @@ public class Team implements IEntity, Serializable {
     @Column
     private int goalsReceived;
 
-    @OneToMany(mappedBy="team", cascade=ALL)
+    @OneToMany(mappedBy="team", cascade=ALL, fetch = FetchType.EAGER)
     private List<Player> players;
 
     public Team() {}
@@ -184,5 +184,9 @@ public class Team implements IEntity, Serializable {
 
     public int getPoints() {
         return this.getWins() * WIN_VALUE + this.getDraws() * DRAW_VALUE + this.getLosses() * LOSS_VALUE;
+    }
+
+    public int getGoalDifference() {
+        return this.getGoalsScored() - this.getGoalsReceived();
     }
 }

@@ -6,6 +6,7 @@ import mx.edu.uaz.is.poo2.carger.controller.crud.*;
 import mx.edu.uaz.is.poo2.carger.controller.view.*;
 import mx.edu.uaz.is.poo2.carger.model.constants.CRUDTable;
 import static mx.edu.uaz.is.poo2.carger.services.dao.DAOServiceFactory.*;
+import mx.edu.uaz.is.poo2.carger.view.Logger;
 
 public class ControllerCreator {
     private static ConsultController consultController;
@@ -13,6 +14,8 @@ public class ControllerCreator {
     private static CRUDSelectController crudSelectController;
     private static ScheduleController scheduleController;
     private static MatchFillController matchFillController;
+
+    private static final Logger logger = new Logger(ControllerCreator.class.getSimpleName());
 
     public static ConsultController getConsultController() {
         if (consultController == null) {
@@ -117,5 +120,15 @@ public class ControllerCreator {
         getTeamCRUDWindow().setController(getCRUDController(CRUDTable.TEAM));
         getPlayerCRUDWindow().setController(getCRUDController(CRUDTable.PLAYER));
         getMatchCRUDWindow().setController(getCRUDController(CRUDTable.MATCH));
+    }
+
+    public static void assembleAll() {
+        logger.info("Armando controladores y ventanas...");
+        getConsultController();
+        getLoginController();
+        getScheduleController();
+        getCRUDSelectController();
+        getMatchFillController();
+        setAllCRUDController();
     }
 }

@@ -3,6 +3,8 @@ package mx.edu.uaz.is.poo2.carger.controller.view;
 import java.util.List;
 
 import mx.edu.uaz.is.poo2.carger.controller.*;
+import mx.edu.uaz.is.poo2.carger.model.constants.columns.*;
+import mx.edu.uaz.is.poo2.carger.model.constants.Messages;
 import mx.edu.uaz.is.poo2.carger.services.dao.*;
 import mx.edu.uaz.is.poo2.carger.model.entities.*;
 import mx.edu.uaz.is.poo2.carger.model.entities.events.Event;
@@ -19,7 +21,9 @@ public class ConsultController extends Controller {
 
     private final TeamDAOService teamDAOService;
     private final MatchDAOService matchDAOService;
-    private final PlayerDAOService playerDAOService;
+    // private final PlayerDAOService playerDAOService;
+
+    private boolean customLeagueWindowTeams;
 
     private final StatisticsGenerator statsGen;
 
@@ -27,14 +31,28 @@ public class ConsultController extends Controller {
         super();
         this.teamDAOService = teamDAOService;
         this.matchDAOService = matchDAOService;
-        this.playerDAOService = playerDAOService;
+        // this.playerDAOService = playerDAOService;
         this.statsGen = StatisticsGenerator.getInstance();
+        this.customLeagueWindowTeams = false;
     }
 
+    @Override
+    public void startLeagueWindow() {
+        this.initUpdateLeague();
+        this.leagueWindow.start();
+    }
+
+    // Window entities setters
 
     public void setLeagueWindowTeams() {
-        this.updateLeague();
-        this.leagueWindow.setTeams(this.statsGen.getTeamsByPoints());
+        if (!this.customLeagueWindowTeams)
+            this.leagueWindow.setTeams(this.statsGen.getTeamsBy(LeagueColumns.POINTS));
+        this.customLeagueWindowTeams = false;
+    }
+
+    public void setTeamsBy(LeagueColumns column, boolean reversed) {
+        this.leagueWindow.setTeams(this.statsGen.getTeamsBy(column, reversed));
+        this.customLeagueWindowTeams = true;
     }
 
     public void setMatchWindowMatches() {
@@ -48,10 +66,16 @@ public class ConsultController extends Controller {
     }
 
     public void setPlayerWindowPlayers() {
-        var players = this.playerDAOService.findAll();
+        var players = this.statsGen.getPlayersBy(PlayerColumns.GOALS);
         this.playerWindow.setPlayers(players);
     }
 
+    public void setPlayersBy(PlayerColumns column, boolean reversed) {
+        var players = this.statsGen.getPlayersBy(column, reversed);
+        this.playerWindow.setPlayers(players);
+    }
+
+    // LoginWindow
 
     public void startLoginWindow() {
         this.loginWindow.start();
@@ -61,6 +85,7 @@ public class ConsultController extends Controller {
         this.loginWindow = window;
     }
 
+    // MatchWindow
 
     public void startMatchWindow() {
         this.matchWindow.start();
@@ -74,6 +99,7 @@ public class ConsultController extends Controller {
         this.matchWindow = window;
     }
 
+    // EventWindow
 
     public void startEventWindow(List<Event> events) {
         this.eventWindow.setEvents(events);
@@ -88,9 +114,14 @@ public class ConsultController extends Controller {
         this.eventWindow = window;
     }
 
+    // PlayerWindow
 
     public void startPlayerWindow() {
         this.playerWindow.start();
+    }
+
+    public void startPlayerWindow(int amount, boolean showId) {
+        this.playerWindow.start(amount, showId);
     }
 
     public void startPlayerWindow(Player player) {
@@ -101,6 +132,7 @@ public class ConsultController extends Controller {
         this.playerWindow = window;
     }
 
+    // TeamWindow
 
     public void startTeamWindow() {
         this.teamWindow.start();
@@ -114,6 +146,11 @@ public class ConsultController extends Controller {
         this.teamWindow = window;
     }
     
+    private void initUpdateLeague() {
+        this.logger.info("Calculando estadísticas...");
+        statsGen.updateLeague();
+        this.logger.info(Messages.READY);
+    }
 
     public void updateLeague() {
         statsGen.updateLeague();

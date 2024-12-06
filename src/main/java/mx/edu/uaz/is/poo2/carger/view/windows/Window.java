@@ -116,7 +116,7 @@ public abstract class Window<C extends Controller> {
     public String readString(String message, int lo, int hi) {
         String data;
         while (true) { 
-            data = this.readGeneric(message, (String x) -> { return x; });
+            data = this.readGeneric(message, (String x) -> { return x.trim(); });
             if (data.length() < lo || data.length() > hi) {
                 this.printerr(ErrorKind.INPUT_ERROR, String.format(Messages.INVALID_LEN_RANGE, lo, hi));
                 continue;
@@ -137,6 +137,14 @@ public abstract class Window<C extends Controller> {
         var str = new StringBuilder();
         for (int i = 0; i < options.size(); i++) {
             str.append(String.format("%d. %s\n", i + 1, options.get(i).toString()));
+        }
+        return str.toString();
+    }
+
+    public <T> String listAsNumeratedStr(T[] options) {
+        var str = new StringBuilder();
+        for (int i = 0; i < options.length; i++) {
+            str.append(String.format("%d. %s\n", i + 1, options[i].toString()));
         }
         return str.toString();
     }

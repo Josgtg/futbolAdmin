@@ -41,4 +41,29 @@ public class Messages {
     public static final String ENTITY_DELETED = "El elemento ha sido elimindado.";
 
     public static final String NO_EVENTS = "No hay eventos para consultar.";
+    public static final String NO_EVENTS_MODIFY = "No hay eventos para modificar.";
+
+    public static final String READY = "¡Listo!";
+
+    private static final String TABLE_IMPORTED = "Tabla %s importada exitosamente.";
+    private static final String IMPORTING_TABLE = "Importando la tabla %s...";
+
+    public static final String NO_MATCHES_NOT_PLAYED = "No hay partidos que aun no se han jugado";
+    public static final String NO_MATCHES_PLAYED = "No hay partidos que ya fueron jugados";
+    public static final String ASK_TO_ADD_EVENTS = "Deseas añadir eventos?? (s/n): ";
+    public static final String ASK_TO_MODIFY_DELETE_EVENT = "Selecciona 1 si quieres Modificar este evento, 2 para eliminarlo y 0 para continuar: ";
+    public static final String SELECT_EVENT_KIND = "Selecciona el numero del tipo de evento: ";
+    public static final String ASK_UPDATED_MINUTE = "introduce el minuto nuevo: ";
+    public static final String ASK_TO_MODIFY = "Deseas Modificarlo (s/n): ";
+    public static final String ASK_TO_CONTINUE = "Estas seguro que deseas continuar? (s/n): ";
+    public static final String DELETE_ALL_MATCHES_WARNING = "Si continuas se perderan PERMANENTEMENTE todos los partidos de la liga y esta se reiniciara";
+
+
+    public static String tableImported(String tableName) {
+        return String.format(TABLE_IMPORTED, tableName);
+    }
+
+    public static String importingTable(String tableName) {
+        return String.format(IMPORTING_TABLE, tableName);
+    }
 }

@@ -7,6 +7,7 @@ import mx.edu.uaz.is.poo2.carger.services.dao.*;
 import mx.edu.uaz.is.poo2.carger.model.entities.*;
 import mx.edu.uaz.is.poo2.carger.model.entities.events.Event;
 import mx.edu.uaz.is.poo2.carger.services.MatchGenerator;
+import mx.edu.uaz.is.poo2.carger.services.StatisticsGenerator;
 import mx.edu.uaz.is.poo2.carger.view.windows.consult.EventWindow;
 import mx.edu.uaz.is.poo2.carger.view.windows.schedule.MatchAdminWindow;
 
@@ -17,17 +18,31 @@ public class ScheduleController extends Controller {
     private MatchAdminWindow matchWindow;
     private final MatchGenerator matchGenerator;
     private EventWindow eventWindow;
+    private final StatisticsGenerator statisticsGenerator;
 
     public ScheduleController(MatchDAOService matchDAOService, TeamDAOService teamDAOService) {
         super();
         this.daoM = matchDAOService;
         this.daoT = teamDAOService;
         this.matchGenerator = new MatchGenerator(daoM);
+        this.statisticsGenerator = StatisticsGenerator.getInstance();
     }
 
     public void generateMatches(){
-        List<Team> teams = daoT.findAll();
+        this.deleteMatches();
+        this.logger.info("Generando nuevos partidos...");
+        List<Team> teams = this.daoT.findAll();
         matchGenerator.generateMatches(teams);
+    }
+
+    public void deleteMatches(){
+        this.logger.info("Borrando todos los partidos...");
+        List<Match> matches = this.daoM.findAll();
+        for (Match match : matches) {
+            statisticsGenerator.revertMatch(match);
+        }
+
+        this.daoM.deleteAll();
     }
 
     public void startMatchWindow() {
@@ -59,4 +74,7 @@ public class ScheduleController extends Controller {
         this.eventWindow = window;
     }
 
+    public List<Team> getTeams() {
+        return this.daoT.findAll();
+    }
 }

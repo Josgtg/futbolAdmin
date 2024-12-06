@@ -77,6 +77,10 @@ public class CRUDController<T extends IEntity> extends Controller {
         this.playerWindow.start();
     }
 
+    public void startPlayerWindow(int amount, boolean showId) {
+        this.playerWindow.start(amount, showId);
+    }
+
     public void startPlayerWindow(Player player) {
         this.playerWindow.start(player);
     }
@@ -88,6 +92,10 @@ public class CRUDController<T extends IEntity> extends Controller {
 
     public void startTeamWindow() {
         this.teamWindow.start();
+    }
+
+    public void startTeamWindow(boolean showId) {
+        this.teamWindow.start(Integer.MAX_VALUE, showId);
     }
 
     public void startTeamWindow(Team team) {
@@ -103,7 +111,24 @@ public class CRUDController<T extends IEntity> extends Controller {
         return this.playerCRUDWindow.readEntity();
     }
 
+    public Player readPlayerFromUser(Team team) {
+        return this.playerCRUDWindow.readEntity(team);
+    }
+
     public void setPlayerCRUDWindow(PlayerCRUDWindow window) {
         this.playerCRUDWindow = window;
-    } 
+    }
+
+    public Optional<Player> savePlayer(Player player) {
+        Optional<Team> team =  DAOServiceFactory.getTeamDAOService().find(player.getTeam());
+        if (team.isPresent()) {
+            team.get().addPlayer(player);
+            if (DAOServiceFactory.getTeamDAOService().save(team.get()).isPresent())
+                return Optional.of(player);
+        } else {
+            if (DAOServiceFactory.getPlayerDAOService().save(player).isPresent())
+                return Optional.of(player);
+        }
+        return Optional.empty();
+    }
 }

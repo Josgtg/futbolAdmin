@@ -18,9 +18,9 @@ public class Event implements IEntity, Serializable {
 
     @Enumerated(EnumType.ORDINAL)
     private EventKind eventKind;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private Player firstPlayer;
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     private Player secondPlayer;
     @Column
     private int minute;
@@ -93,6 +93,10 @@ public class Event implements IEntity, Serializable {
 
     @Override
     public String basicToString() {
-        return String.format("Event{ kind: %s }", this.eventKind);
+        return String.format("%s en el minuto %d", this.eventKind, this.minute);
+    }
+@   Override
+    public String toString(){
+        return String.format("Event{ id: %d, kind: %s, minute: %d, firstPlayer: %s, secondPlayer: %d",this.id, this.eventKind, this.minute, this.firstPlayer, this.secondPlayer);
     }
 }

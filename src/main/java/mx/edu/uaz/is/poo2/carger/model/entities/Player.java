@@ -103,12 +103,20 @@ public class Player implements IEntity, Serializable {
         this.gamesPlayed = gamesPlayed;
     }
 
+    public void sumGamesPlayed(int sum) {
+        this.gamesPlayed += sum;
+    }
+
     public int getGoals() {
         return goals;
     }
 
     public void setGoals(int goals) {
         this.goals = goals;
+    }
+
+    public void sumGoals(int sum) {
+        this.goals += sum;
     }
 
     public int getAssists() {
@@ -119,6 +127,10 @@ public class Player implements IEntity, Serializable {
         this.assists = assists;
     }
 
+    public void sumAssists(int sum) {
+        this.assists += sum;
+    }
+
     public int getRedCards() {
         return redCards;
     }
@@ -127,12 +139,20 @@ public class Player implements IEntity, Serializable {
         this.redCards = redCards;
     }
 
+    public void sumRedCards(int sum) {
+        this.redCards += sum;
+    }
+
     public int getYellowCards() {
         return yellowCards;
     }
 
     public void setYellowCards(int yellowCards) {
         this.yellowCards = yellowCards;
+    }
+
+    public void sumYellowCards(int sum) {
+        this.yellowCards += sum;
     }
 
     public Team getTeam() {
@@ -145,7 +165,7 @@ public class Player implements IEntity, Serializable {
 
     @Override
     public String basicToString() {
-        return String.format("%s, Team: %s", this.name, this.getTeam() != null ? this.getTeam().getName() : "NOTEAM");
+        return String.format("%s", this.getName());
     }
 
     @Override

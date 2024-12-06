@@ -3,8 +3,11 @@ package mx.edu.uaz.is.poo2.carger.view.windows.consult;
 import java.util.ArrayList;
 import java.util.List;
 
+import mx.edu.uaz.is.poo2.carger.services.formatters.LeagueFormatter;
 import mx.edu.uaz.is.poo2.carger.controller.view.ConsultController;
-import static mx.edu.uaz.is.poo2.carger.model.constants.AnsiEscapeCodes.*;
+import mx.edu.uaz.is.poo2.carger.model.constants.ErrorKind;
+import mx.edu.uaz.is.poo2.carger.model.constants.Errors;
+import mx.edu.uaz.is.poo2.carger.model.constants.columns.LeagueColumns;
 import mx.edu.uaz.is.poo2.carger.view.windows.*;
 import mx.edu.uaz.is.poo2.carger.model.constants.Messages;
 import mx.edu.uaz.is.poo2.carger.model.constants.WindowMessages;
@@ -12,24 +15,31 @@ import mx.edu.uaz.is.poo2.carger.model.entities.Team;
 
 public class LeagueWindow extends Window<ConsultController> {
     protected List<Team> teams;
+    private final LeagueFormatter leagueFormatter;
 
     public LeagueWindow() {
         super("League");
+        this.leagueFormatter = new LeagueFormatter();
         this.teams = new ArrayList<>();
     }
 
     public LeagueWindow(List<Team> teams) {
         super("League");
+        this.leagueFormatter = new LeagueFormatter();
         this.teams = teams;
     }
 
     @Override
     public void start() {
-        this.controller.setLeagueWindowTeams();
         boolean conntinue = true;
-        while (conntinue) { 
+        while (conntinue) {
+            this.controller.updateLeague();
+            this.controller.setLeagueWindowTeams();
+            this.leagueFormatter.reviewTeams(this.teams);
             this.println(WindowMessages.windowTitle(this.TITLE));
-            conntinue = this.askOptions();   
+            this.showLeague();
+            this.println("");
+            conntinue = this.askOptions();
         }
     }
 
@@ -38,18 +48,45 @@ public class LeagueWindow extends Window<ConsultController> {
             this.println(Messages.NO_ELEMENTS);
             return;
         }
-        for (int i = 0; i < this.teams.size(); i++) {
-            this.println(String.format("%d: %s", i + 1, this.formatTeam(teams.get(i))));
-        }
+        this.println(WindowMessages.LEAGUE_COLUMN_SORT_OPTIONS);
+        this.print(this.leagueFormatter.format(this.teams));
     }
 
     private boolean askOptions() {
-        this.showLeague();
-        int option = this.readInt(WindowMessages.LEAGUE_OPTIONS, -1, this.teams.size());
-        switch (option) {
-            case -1 -> this.controller.startLoginWindow();
-            case 0 -> this.controller.exit(0);
-            default -> this.controller.startTeamWindow(this.teams.get(--option));
+        String optionStr = this.readString(WindowMessages.LEAGUE_OPTIONS, 1, 100);
+        try {
+            int option = Integer.parseInt(optionStr);
+            switch (option) {
+                case -2 -> this.controller.startPlayerWindow(20, false);
+                case -1 -> this.controller.startLoginWindow();
+                case 0 -> this.controller.exit(0);
+                default -> {
+                    if (option <= this.teams.size())
+                        this.controller.startTeamWindow(this.teams.get(--option));
+                    else
+                        this.printerr(ErrorKind.INPUT_ERROR, Errors.INPUT_ERROR);
+                }
+            }
+        } catch (NumberFormatException e) {
+            optionStr += "     ";
+            switch (optionStr.charAt(0)) {
+                case 'p' -> this.controller.setTeamsBy(LeagueColumns.POINTS, optionStr.charAt(1) == '-');
+                case 'n' -> this.controller.setTeamsBy(LeagueColumns.NAME, optionStr.charAt(1) == '-');
+                case 'v' -> this.controller.setTeamsBy(LeagueColumns.WINS, optionStr.charAt(1) == '-');
+                case 'e' -> this.controller.setTeamsBy(LeagueColumns.DRAWS, optionStr.charAt(1) == '-');
+                case 'd' -> {
+                    if (optionStr.charAt(1) == 'g') this.controller.setTeamsBy(LeagueColumns.GD, optionStr.charAt(2) == '-');
+                    else this.controller.setTeamsBy(LeagueColumns.LOSSES, optionStr.charAt(1) == '-');
+                }
+                case 'g' -> {
+                    switch (optionStr.charAt(1)) {
+                        case 'f' -> this.controller.setTeamsBy(LeagueColumns.GF, optionStr.charAt(2) == '-');
+                        case 'c' -> this.controller.setTeamsBy(LeagueColumns.GA, optionStr.charAt(2) == '-');
+                        default -> this.printerr(ErrorKind.INPUT_ERROR, Messages.INVALID_INPUT);
+                    }
+                }
+                default -> this.printerr(ErrorKind.INPUT_ERROR, Messages.INVALID_INPUT);
+            }
         }
         return true;
     }
@@ -60,18 +97,5 @@ public class LeagueWindow extends Window<ConsultController> {
 
     public void setTeams(List<Team> teams) {
         this.teams = teams;
-    }
-
-    public String formatTeam(Team t) {
-        int diffInt = t.getGoalsScored() - t.getGoalsReceived();
-        String diffStr = String.valueOf(diffInt);
-        if (diffInt > 0)
-            diffStr = "+" + diffStr;
-        return String.format(
-            "%s | %sW:%s %d | %sD:%s %d | %sL:%s %d | GF: %d | GA: %d | GD: %s | Pts: %d", 
-            t.getName(), ANSI_GREEN,  ANSI_RESET, t.getWins(), ANSI_YELLOW, ANSI_RESET, t.getDraws(),
-            ANSI_RED, ANSI_RESET, t.getLosses(), t.getGoalsScored(),
-            t.getGoalsReceived(), diffStr, t.getPoints()
-        );
     }
 }
